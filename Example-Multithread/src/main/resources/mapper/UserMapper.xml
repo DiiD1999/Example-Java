@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.multithread.mapper.UserMapper">
+
+	<resultMap type="com.example.multithread.domain.User" id="UserResult">
+		<id     property="userId"        column="user_id"         />
+		<result property="userName"      column="user_name"       />
+		<result property="sex"           column="sex"             />
+		<result property="age"	column="age"          />
+	</resultMap>
+
+<!--	<select id="selectUserList" parameterType="com.example.multithread.domain.User" resultMap="com.example.multithread.domain.User">-->
+
+<!--	</select>-->
+
+	<select id="selectUserByLoginName" parameterType="String" resultMap="UserResult">
+		select * from user where user_name = #{userName} limit 1
+	</select>
+
+	<select id="selectUserById" parameterType="Long" resultMap="UserResult">
+		select * from user where user_id = #{userId} limit 1
+	</select>
+
+	<delete id="deleteUserById" parameterType="Long">
+		DELETE FROM `user` WHERE `user_id` = #{user_id}
+	</delete>
+
+	<delete id="deleteUserByIds" parameterType="Long">
+		DELETE FROM `user` WHERE `user_id` in
+		<foreach collection="array" item="userId" open="(" separator="," close=")">
+			#{userId}
+		</foreach>
+	</delete>
+
+	<update id="updateUser" parameterType="User">
+		update user
+		<set>
+			<if test="userName != null and userName != ''">user_name = #{userName},</if>
+			<if test="sex != null and sex != ''">sex = #{sex},</if>
+			<if test="age != null">age = #{age},</if>
+		</set>
+		where user_id = #{userId}
+	</update>
+
+	<insert id="insertUser" parameterType="User" useGeneratedKeys="true" keyProperty="userId">
+		insert into user(
+		<if test="userId != null and userId != 0">user_id,</if>
+		<if test="userName != null and userName != ''">user_name,</if>
+		<if test="sex != null and sex != ''">sex,</if>
+		<if test="age != null and age != ''">age</if>
+		)value(
+		<if test="userId != null and userId != ''">#{userId},</if>
+		<if test="userName != null and userName != ''">#{userName},</if>
+		<if test="sex != null and sex != ''">#{sex},</if>
+		<if test="age != null and age != ''">#{age}</if>
+		)
+	</insert>
+
+	<insert id="batchInsertUser" useGeneratedKeys="true" keyProperty="user_id">
+		insert into user (user_id, user_name, age, sex) values
+		<foreach item="item" index="index" collection="list" separator=",">
+			(#{item.userId}, #{item.userName}, #{item.age}, #{item.sex})
+		</foreach>
+	</insert>
+</mapper> 
