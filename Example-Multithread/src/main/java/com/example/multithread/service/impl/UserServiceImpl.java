@@ -6,6 +6,7 @@ import com.example.multithread.service.IUserService;
 import com.example.multithread.util.Convert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -13,15 +14,11 @@ import java.util.List;
  * @author DiiD
  */
 @Service
+@Transactional(rollbackFor = Exception.class)
 public class UserServiceImpl implements IUserService {
 
     @Autowired
     UserMapper userMapper;
-
-//    @Override
-//    public List<User> selectUserList(User user) {
-//        return userMapper.selectUserList(user);
-//    }
 
     @Override
     public User selectUserByLoginName(String userName) {
@@ -46,7 +43,10 @@ public class UserServiceImpl implements IUserService {
 
     @Override
     public int updateUser(User user) {
-        user.setAge(user.getAge() + 1);
+        User oldUser = userMapper.selectUserByLoginName(user.getUserName());
+        user.setUserId(oldUser.getUserId());
+        // 多线程一起访问，数据乱序
+        user.setAge(oldUser.getAge() + 1);
         System.out.println(user.toString());
         return userMapper.updateUser(user);
     }
