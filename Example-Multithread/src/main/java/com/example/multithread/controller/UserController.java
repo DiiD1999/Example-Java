@@ -39,7 +39,11 @@ public class UserController {
 
     @PostMapping("/edit")
     public ResponseEntity<Object> updateUser(@RequestBody User user) {
-        return new ResponseEntity<>(userService.updateUser(user), HttpStatus.OK);
+        int result = 0;
+        synchronized (this) {
+            result = userService.updateUser(user);
+        }
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     @PostMapping("/add")
