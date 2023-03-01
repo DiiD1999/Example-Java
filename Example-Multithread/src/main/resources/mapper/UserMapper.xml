@@ -11,12 +11,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<result property="age"	column="age"          />
 	</resultMap>
 
-<!--	<select id="selectUserList" parameterType="com.example.multithread.domain.User" resultMap="com.example.multithread.domain.User">-->
-
-<!--	</select>-->
+	<select id="selectUserList" resultMap="UserResult">
+		select * from user
+	</select>
 
 	<select id="selectUserByLoginName" parameterType="String" resultMap="UserResult">
-		select * from user where user_name = #{userName} limit 1
+		select user_name, sex, age from user where user_name = #{userName} limit 1
 	</select>
 
 	<select id="selectUserById" parameterType="Long" resultMap="UserResult">
@@ -58,7 +58,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		)
 	</insert>
 
-	<insert id="batchInsertUser" useGeneratedKeys="true" keyProperty="user_id">
+	<insert id="batchInsertUser" useGeneratedKeys="true">
 		insert into user (user_id, user_name, age, sex) values
 		<foreach item="item" index="index" collection="list" separator=",">
 			(#{item.userId}, #{item.userName}, #{item.age}, #{item.sex})

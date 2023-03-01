@@ -24,5 +24,5 @@ mybatis:
 #
 logging:
   level:
-    com.example.multithread.mapper: debug
+    com.example.multithread.mapper: info
 

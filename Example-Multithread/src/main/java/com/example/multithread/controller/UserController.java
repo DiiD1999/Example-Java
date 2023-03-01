@@ -7,6 +7,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 /**
  * @author DiiD
  */
@@ -51,4 +53,13 @@ public class UserController {
         return new ResponseEntity<>(userService.insertUser(user), HttpStatus.OK);
     }
 
+    @PostMapping("/batchAdd")
+    public ResponseEntity<Object> batchInsertUser(@RequestBody List<User> ids) {
+        return new ResponseEntity<>(userService.batchInsertUser(ids), HttpStatus.OK);
+    }
+
+    @GetMapping("/getList")
+    public ResponseEntity<Object> selectUserList() {
+        return new ResponseEntity<>(userService.selectUserList(), HttpStatus.OK);
+    }
 }

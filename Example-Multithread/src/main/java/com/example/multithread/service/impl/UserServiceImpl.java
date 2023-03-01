@@ -60,4 +60,9 @@ public class UserServiceImpl implements IUserService {
     public int batchInsertUser(List<User> userList) {
         return userMapper.batchInsertUser(userList);
     }
+
+    @Override
+    public List<User> selectUserList() {
+        return userMapper.selectUserList();
+    }
 }

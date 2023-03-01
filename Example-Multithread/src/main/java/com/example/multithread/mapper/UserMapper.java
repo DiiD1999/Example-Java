@@ -16,10 +16,9 @@ public interface UserMapper {
     /**
      * 根据用户列表
      *
-     * @param sysUser 用户信息
      * @return 用户信息集合信息
      */
-//    public List<User> selectUserList(User sysUser);
+    public List<User> selectUserList();
 
     /**
      * 通过用户名查询用户

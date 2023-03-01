@@ -1,11 +1,14 @@
 package com.example.multithread.domain;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 /**
  * @author DiiD
  */
 
 public class User {
+    @JsonIgnore
     private Long userId;
     private String userName;
     private Integer age;
