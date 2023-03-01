@@ -72,5 +72,5 @@ public interface IUserService {
      * @param userList 新增用户列表
      * @return 结果
      */
-    public int batchInsertUser(List<User> userList);
+    public int batchInsertUser(List<User> userList) throws InterruptedException;
 }

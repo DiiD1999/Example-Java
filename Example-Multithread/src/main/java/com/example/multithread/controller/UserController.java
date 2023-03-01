@@ -54,7 +54,7 @@ public class UserController {
     }
 
     @PostMapping("/batchAdd")
-    public ResponseEntity<Object> batchInsertUser(@RequestBody List<User> ids) {
+    public ResponseEntity<Object> batchInsertUser(@RequestBody List<User> ids) throws InterruptedException {
         return new ResponseEntity<>(userService.batchInsertUser(ids), HttpStatus.OK);
     }
 

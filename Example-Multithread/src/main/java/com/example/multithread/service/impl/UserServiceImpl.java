@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.swing.*;
 import java.util.List;
+import java.util.concurrent.*;
 
 /**
  * @author DiiD
@@ -59,16 +60,39 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
-    public int batchInsertUser(List<User> userList) {
+    public int batchInsertUser(List<User> userList) throws InterruptedException {
         // todo 一次性插入一万条数据平均耗时650ms
         // return userMapper.batchInsertUser(userList);
-        if(userList.size() > 200) {
+
+//        if(userList.size() > 200) {
+//            List<List<User>> smallUserList = Lists.partition(userList, 200);
+//            int count = 0;
+//            for(int i = 0; i < smallUserList.size(); i++) {
+//                count += userMapper.batchInsertUser(smallUserList.get(i));
+//            }
+//            return count;
+//        }
+        if (userList.size() > 200) {
             List<List<User>> smallUserList = Lists.partition(userList, 200);
-            int count = 0;
-            for(int i = 0; i < smallUserList.size(); i++) {
-                count += userMapper.batchInsertUser(smallUserList.get(i));
+            ThreadPoolExecutor executor = new ThreadPoolExecutor(2, 10, 0, TimeUnit.MILLISECONDS, new SynchronousQueue<>(), new ThreadPoolExecutor.CallerRunsPolicy());
+            CountDownLatch countDownLatch = new CountDownLatch(smallUserList.size());
+            // 须和CountDownLatch的数量保持一致，否则显示不准确
+            LinkedBlockingQueue<Integer> queue = new LinkedBlockingQueue(smallUserList.size());
+            int result = 0;
+            for (int i = 0; i < smallUserList.size(); i++) {
+                List<User> part = smallUserList.get(i);
+                executor.execute(() -> {
+                    int cnt = userMapper.batchInsertUser(part);
+                    // 不可使用add方法，否则出现Queue full 错误
+                    queue.offer(cnt);
+                    countDownLatch.countDown();
+                });
             }
-            return count;
+            countDownLatch.await();
+            for (Integer cnt : queue) {
+                result += cnt;
+            }
+            return result;
         }
         return userMapper.batchInsertUser(userList);
     }
