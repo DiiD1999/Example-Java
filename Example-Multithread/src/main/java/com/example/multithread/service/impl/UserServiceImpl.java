@@ -4,10 +4,12 @@ import com.example.multithread.domain.User;
 import com.example.multithread.mapper.UserMapper;
 import com.example.multithread.service.IUserService;
 import com.example.multithread.util.Convert;
+import com.google.common.collect.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.swing.*;
 import java.util.List;
 
 /**
@@ -58,6 +60,16 @@ public class UserServiceImpl implements IUserService {
 
     @Override
     public int batchInsertUser(List<User> userList) {
+        // todo 一次性插入一万条数据平均耗时650ms
+        // return userMapper.batchInsertUser(userList);
+        if(userList.size() > 200) {
+            List<List<User>> smallUserList = Lists.partition(userList, 200);
+            int count = 0;
+            for(int i = 0; i < smallUserList.size(); i++) {
+                count += userMapper.batchInsertUser(smallUserList.get(i));
+            }
+            return count;
+        }
         return userMapper.batchInsertUser(userList);
     }
 
