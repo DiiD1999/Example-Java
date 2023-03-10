@@ -23,6 +23,6 @@ public class Main {
         System.out.println(sum);
 
 
-        Thread.sleep(500);
+//        Thread.sleep(500);
     }
 }
