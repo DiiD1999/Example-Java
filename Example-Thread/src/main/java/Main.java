@@ -14,6 +14,7 @@ public class Main {
         thread2.setDaemon(true);
         thread2.start();
 
+        //todo 实现Callable的线程时守护线程吗?
         ThreadThree thread3 = new ThreadThree();
         FutureTask<Integer> futureTask = new FutureTask<Integer>(thread3);
         new Thread(futureTask).start();
