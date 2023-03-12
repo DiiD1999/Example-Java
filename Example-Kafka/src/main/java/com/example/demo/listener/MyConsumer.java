@@ -31,7 +31,7 @@ public class MyConsumer {
     }
 
     //配置多个消费组
-    @KafkaListener(topics = "example-topic", groupId = "example-group")
+    @KafkaListener(topics = "example-topic", groupId = "example-group2")
     public void listenGroupTwo(ConsumerRecord<String, String> record, Acknowledgment ack) {
         String value = record.value();
         System.out.println("GroupTwo message: " + value);
