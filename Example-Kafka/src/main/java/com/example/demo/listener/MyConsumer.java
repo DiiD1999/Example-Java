@@ -20,22 +20,22 @@ public class MyConsumer {
      * },concurrency = "6")
      * //concurrency就是同组下的消费者个数，就是并发消费数，必须小于等于分区总数
      */
-    @KafkaListener(topics = "example-topic", groupId = "jihuGroup")
-    public void listenJihuGroup(ConsumerRecord<String, String> record, Acknowledgment ack) {
+    @KafkaListener(topics = "example-topic", groupId = "example-group")
+    public void listenGroupOne(ConsumerRecord<String, String> record, Acknowledgment ack) {
         String value = record.value();
-        System.out.println("jihuGroup message: " + value);
-        System.out.println("jihuGroup record: " + record);
+        System.out.println("GroupOne message: " + value);
+        System.out.println("GroupOne record: " + record);
         //手动提交offset，一般是提交一个banch，幂等性防止重复消息
         // === 每条消费完确认性能不好！
         ack.acknowledge();
     }
 
     //配置多个消费组
-    @KafkaListener(topics = "example-topic", groupId = "jihuGroup2")
-    public void listenJihuGroup2(ConsumerRecord<String, String> record, Acknowledgment ack) {
+    @KafkaListener(topics = "example-topic", groupId = "example-group")
+    public void listenGroupTwo(ConsumerRecord<String, String> record, Acknowledgment ack) {
         String value = record.value();
-        System.out.println("jihuGroup2 message: " + value);
-        System.out.println("jihuGroup2 record: " + record);
+        System.out.println("GroupTwo message: " + value);
+        System.out.println("GroupTwo record: " + record);
         //手动提交offset
         ack.acknowledge();
     }
